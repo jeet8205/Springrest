@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  spring:
+    image: spring_micro
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/ticket_db?autoReconnect=true&failOverReadOnly=false&maxReconnects=50
+      SPRING_DATASOURCE_USERNAME: user_spring
+      SPRING_DATASOURCE_PASSWORD: SeCreT7
+    depends_on:
+      - mysqldb
+  
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_USER=user_spring
+      - MYSQL_PASSWORD=SeCreT7
+      - MYSQL_DATABASE=ticket_db
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - "./conf.d:/etc/mysql/conf.d:ro"
